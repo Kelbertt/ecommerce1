@@ -1,10 +1,24 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import reactLogo from './assets/react.svg';
+import viteLogo from '/vite.svg';
+import './App.css';
+import api from './api'; // Importando a função de API
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  const [message, setMessage] = useState(''); // Estado para a resposta do backend
+
+  // Requisição para o backend
+  useEffect(() => {
+    api.get('/')
+      .then((response) => {
+        setMessage(response.data); // Atualiza o estado com a resposta
+      })
+      .catch((error) => {
+        console.error(error);
+        setMessage('Erro ao conectar com o backend');
+      });
+  }, []);
 
   return (
     <>
@@ -28,8 +42,14 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+
+      {/* Exibindo a resposta do backend */}
+      <div>
+        <h2>Mensagem do Backend:</h2>
+        <p>{message}</p>
+      </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
